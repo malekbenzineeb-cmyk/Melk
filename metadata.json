@@ -1,0 +1,5 @@
+{
+  "name": "Cyber Ocean Lead Pipeline",
+  "description": "A local CRM-style lead management and analytics pipeline for Cyber Ocean’s e-learning division. This system tracks leads from first contact to payment, visualizes conversion stages, and provides actionable analytics to optimize sales performance.",
+  "requestFramePermissions": []
+}
