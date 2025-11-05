@@ -23,8 +23,10 @@ const ReasonFrequencyChart: React.FC<{ leads: Lead[] }> = ({ leads }) => {
             return acc;
         }, {} as Record<string, number>);
 
-    const data = Object.entries(reasonCounts)
-        .map(([name, count]) => ({ name, count }))
+    // Fix: Use Object.keys and map to ensure count is typed as a number for sorting.
+    // Object.entries can have vague type inference for values in some TypeScript configurations.
+    const data = Object.keys(reasonCounts)
+        .map((name) => ({ name, count: reasonCounts[name] }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 5); // Show top 5 reasons
 

@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { Lead, PipelineStage } from '../types';
-import { PIPELINE_STAGES, STAGE_COLORS } from '../constants';
+import { Lead, PaymentStage } from '../types';
+import { PAYMENT_PIPELINE_STAGES, PAYMENT_STAGE_COLORS } from '../constants';
 import LeadCard from './LeadCard';
 
-interface PipelineViewProps {
+interface PaymentsPipelineViewProps {
     leads: Lead[];
     onEditLead: (lead: Lead) => void;
     onDeleteLead: (leadId: string) => void;
-    onUpdateLead: (leadId: string, updatedData: Partial<Lead>) => void;
+    onUpdateLeadPaymentStage: (leadId: string, paymentStage: PaymentStage) => void;
     selectedLeadIds: string[];
     onSelectLead: (leadId: string) => void;
 }
 
-const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDeleteLead, onUpdateLead, selectedLeadIds, onSelectLead }) => {
+const PaymentsPipelineView: React.FC<PaymentsPipelineViewProps> = ({ leads, onEditLead, onDeleteLead, onUpdateLeadPaymentStage, selectedLeadIds, onSelectLead }) => {
     const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
-    const [dragOverStage, setDragOverStage] = useState<PipelineStage | null>(null);
+    const [dragOverStage, setDragOverStage] = useState<PaymentStage | null>(null);
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, leadId: string) => {
         setDraggedLeadId(leadId);
@@ -28,7 +28,7 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
         setDraggedLeadId(null);
     };
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stage: PipelineStage) => {
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, stage: PaymentStage) => {
         e.preventDefault();
         setDragOverStage(stage);
     };
@@ -37,12 +37,12 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
         setDragOverStage(null);
     };
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, stage: PipelineStage) => {
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, stage: PaymentStage) => {
         e.preventDefault();
         if (draggedLeadId) {
             const lead = leads.find(l => l.id === draggedLeadId);
-            if (lead && lead.stage !== stage) {
-                onUpdateLead(draggedLeadId, { stage });
+            if (lead && lead.paymentStage !== stage) {
+                onUpdateLeadPaymentStage(draggedLeadId, stage);
             }
         }
         setDraggedLeadId(null);
@@ -51,9 +51,9 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
 
     return (
         <div className="flex gap-6 overflow-x-auto pb-6 -mx-10 px-10">
-            {PIPELINE_STAGES.map(stage => {
-                const stageLeads = leads.filter(lead => lead.stage === stage);
-                const colors = STAGE_COLORS[stage];
+            {PAYMENT_PIPELINE_STAGES.map(stage => {
+                const stageLeads = leads.filter(lead => lead.paymentStage === stage);
+                const colors = PAYMENT_STAGE_COLORS[stage];
                 return (
                     <div 
                         key={stage} 
@@ -66,7 +66,7 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
                         onDrop={(e) => handleDrop(e, stage)}
                     >
                         <div className={clsx("sticky top-0 p-4 rounded-t-xl z-10", "border-b", colors.border)}>
-                            <h2 className={clsx("text-sm font-bold uppercase tracking-widest flex justify-between items-center", colors.text)}>
+                             <h2 className={clsx("text-sm font-bold uppercase tracking-widest flex justify-between items-center", colors.text)}>
                                 {stage}
                                 <span className="text-xs font-bold bg-black/30 text-gray-300 px-2.5 py-1 rounded-full">
                                     {stageLeads.length}
@@ -92,7 +92,7 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
                             {stageLeads.length === 0 && (
                                 <div className="flex flex-col items-center justify-center h-40 text-center text-gray-600 text-sm border-2 border-dashed border-gray-800 rounded-lg m-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
-                                    <p>Drag leads here</p>
+                                    <p>Drag clients here</p>
                                 </div>
                             )}
                         </div>
@@ -103,4 +103,4 @@ const PipelineView: React.FC<PipelineViewProps> = ({ leads, onEditLead, onDelete
     );
 };
 
-export default PipelineView;
+export default PaymentsPipelineView;
